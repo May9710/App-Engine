@@ -1,0 +1,21 @@
+Ejecute $ gcloud beta app gen-config --customen el mismo directorio con su aplicación.
+Se Dockerfilecreará un.
+Edite Dockerfileagregando los siguientes comandos antes de RUN pip install -r requirements.txt(sugerencia: agregue esas líneas después RUN virtualenv ...y antes # Set virtualenv environment variables ...):
+
+#Install FreeTDS and dependencies for PyODBC 
+RUN apt-get update 
+RUN apt-get install -y tdsodbc unixodbc-dev 
+RUN apt install unixodbc-bin -y 
+RUN apt-get clean -y 
+ADD odbcinst.ini /etc/odbcinst.ini
+
+Crea un archivo odbcinst.inisi aún no existe
+
+Edite el archivo odbcinst.iniy agregue lo siguiente:
+
+[FreeTDS]
+Description=FreeTDS Driver
+Driver=/usr/lib/x86_64-linux-gnu/odbc/libtdsodbc.so
+Setup=/usr/lib/x86_64-linux-gnu/odbc/libtdsS.so
+
+Ejecute $ gcloud app deployy debería desplegarse sin ningún problema.
